@@ -18,3 +18,12 @@ jobs:
         docker run \
         -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
         jekyll/builder:latest /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build --future"
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_Access_key_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_Secret_access_key }}
+        aws-region: us-east-1
+
+    - name: Deploy to S3
+      run: aws s3 sync build s3://example222.com
